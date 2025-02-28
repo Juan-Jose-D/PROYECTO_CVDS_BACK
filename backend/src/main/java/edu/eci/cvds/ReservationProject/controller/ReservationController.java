@@ -1,59 +1,86 @@
 package edu.eci.cvds.ReservationProject.controller;
 
 import edu.eci.cvds.ReservationProject.model.Reservation;
-import edu.eci.cvds.ReservationProject.repository.ReservationRepository;
 import edu.eci.cvds.ReservationProject.service.ReservationService;
-
-import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+/**
+ * Controlador REST para gestionar las reservas.
+ */
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    @Autowired
-    private ReservationRepository reservationRepository;
-    @Autowired
-    private ReservationService reservationService;
 
-    @GetMapping
-    public List<Reservation> allReservations() {
-        return reservationRepository.findAll();
+    private final ReservationService reservationService;
+
+    @Autowired
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
-    @GetMapping("/reservation/{id}")
-    public Reservation oneReservation(@PathVariable ObjectId id) {
-        return reservationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reserva no encontrada con id: " + id));
-    }
-
+    /**
+     * Crea una nueva reserva.
+     *
+     * @param reservation Reserva a crear.
+     * @return La reserva creada con estado HTTP 201 (CREATED).
+     */
     @PostMapping
-    public ResponseEntity<Reservation> crearReserva(@RequestBody Reservation reservation) {
-        Reservation nuevaReserva = reservationService.crearReserva(reservation);
-        return new ResponseEntity<>(nuevaReserva, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/reservation/{id}")
-    public Reservation updateReservation(@PathVariable ObjectId id, @RequestBody Reservation reservation) {
-        if (!reservationRepository.existsById(id)) {
-            throw new RuntimeException("Reserva no encontrada con id: " + id);
+    public ResponseEntity<?> createReservation(@RequestBody Reservation reservation) {
+        try {
+            return new ResponseEntity<>(reservationService.createReservation(reservation), HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
-        reservation.setId(id);
-        return reservationRepository.save(reservation);
     }
 
-    @DeleteMapping("/reservation/{id}")
-    public void deleteReservation(@PathVariable("id") ObjectId id) {
-        reservationRepository.deleteById(id);
+    /**
+     * Obtiene todas las reservas.
+     *
+     * @return Lista de reservas.
+     */
+    @GetMapping
+    public List<Reservation> getAllReservations() {
+        return reservationService.getAllReservations();
+    }
+
+    /**
+     * Obtiene una reserva por su ID.
+     *
+     * @param id ID de la reserva.
+     * @return La reserva encontrada.
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Reservation> getReservation(@PathVariable ObjectId id) {
+        return ResponseEntity.ok(reservationService.getReservationById(id));
+    }
+
+    /**
+     * Modifica una reserva existente.
+     *
+     * @param id          ID de la reserva a modificar.
+     * @param reservation Datos actualizados de la reserva.
+     * @return La reserva actualizada.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Reservation> updateReservation(@PathVariable ObjectId id, @RequestBody Reservation reservation) {
+        return ResponseEntity.ok(reservationService.updateReservation(id, reservation));
+    }
+
+    /**
+     * Elimina una reserva por su ID.
+     *
+     * @param id ID de la reserva a eliminar.
+     * @return Respuesta con estado HTTP 204 (NO CONTENT).
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable ObjectId id) {
+        reservationService.deleteReservation(id);
+        return ResponseEntity.noContent().build();
     }
 }

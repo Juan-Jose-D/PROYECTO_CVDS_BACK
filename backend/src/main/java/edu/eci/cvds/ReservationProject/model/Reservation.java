@@ -8,6 +8,9 @@ import org.bson.types.ObjectId;
 
 @Document(collection = "reservas")
 
+/*
+ * Clase encargada de modelar una reserva
+ */
 public class Reservation {
 
     @Id
@@ -27,14 +30,18 @@ public class Reservation {
 
     @Field("status")
     private Boolean status;
+    
+    @Field("purpose")
+    private String purpose;
 
-    public Reservation(ObjectId  id, String user, Date date, String initialTime, String finalTime, Boolean status) {
+    public Reservation(ObjectId  id, String user, Date date, String initialTime, String finalTime, Boolean status, String purpose) {
         this.id = id;
         this.user = user;
         this.date = date;
         this.initialTime = initialTime;
         this.finalTime = finalTime;
         this.status = status;
+        this.purpose = purpose;
     }
 
     public ObjectId getId() {
@@ -83,6 +90,14 @@ public class Reservation {
 
     public void setStatus(Boolean status) {
         this.status = status;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 }
 

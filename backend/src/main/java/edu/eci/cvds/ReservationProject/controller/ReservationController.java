@@ -5,7 +5,6 @@ import edu.eci.cvds.ReservationProject.repository.ReservationRepository;
 import edu.eci.cvds.ReservationProject.service.ReservationService;
 
 import java.util.List;
-import java.util.Optional;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,7 +48,7 @@ public class ReservationController {
         if (!reservationRepository.existsById(id)) {
             throw new RuntimeException("Reserva no encontrada con id: " + id);
         }
-        reservation.setId(id); // Asegúrate de que el ID de la reserva sea el mismo que el proporcionado
+        reservation.setId(id);
         return reservationRepository.save(reservation);
     }
 

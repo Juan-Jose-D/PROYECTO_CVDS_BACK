@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.bson.types.ObjectId;
 import edu.eci.cvds.ReservationProject.model.Reservation;
+import edu.eci.cvds.ReservationProject.model.Laboratory;
 
 /**
  * Repositorio para gestionar las operaciones CRUD de las reservas en la base de datos MongoDB.
@@ -29,6 +30,6 @@ public interface ReservationRepository extends MongoRepository<Reservation, Obje
      * @param finalTime   Hora final de la reserva.
      * @return Lista de reservas que coinciden con el criterio.
      */
-    List<Reservation> findByDateAndInitialTimeLessThanEqualAndFinalTimeGreaterThanEqual(
-            Date date, String finalTime, String initialTime);
+    List<Reservation> findByDateAndInitialTimeLessThanEqualAndFinalTimeGreaterThanEqualAndLaboratory(
+            Date date, String finalTime, String initialTime, Laboratory laboratory);
 }

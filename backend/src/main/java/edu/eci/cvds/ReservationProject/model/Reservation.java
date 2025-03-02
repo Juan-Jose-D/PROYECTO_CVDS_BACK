@@ -34,7 +34,10 @@ public class Reservation {
     @Field("purpose")
     private String purpose;
 
-    public Reservation(ObjectId  id, String user, Date date, String initialTime, String finalTime, Boolean status, String purpose) {
+    @Field("laboratory")
+    private Laboratory laboratory;
+
+    public Reservation(ObjectId  id, String user, Date date, String initialTime, String finalTime, Boolean status, String purpose, Laboratory laboratory) {
         this.id = id;
         this.user = user;
         this.date = date;
@@ -42,6 +45,7 @@ public class Reservation {
         this.finalTime = finalTime;
         this.status = status;
         this.purpose = purpose;
+        this.laboratory = laboratory;
     }
 
     public ObjectId getId() {
@@ -98,6 +102,14 @@ public class Reservation {
 
     public void setPurpose(String purpose) {
         this.purpose = purpose;
+    }
+
+    public Laboratory getLaboratory() {
+        return laboratory;
+    }
+
+    public void setLaboratory(Laboratory laboratory) {
+        this.laboratory = laboratory;
     }
 }
 

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+
+import edu.eci.cvds.ReservationProject.ReservationProjectException;
 import edu.eci.cvds.ReservationProject.model.Laboratory;
 
 
@@ -39,7 +41,7 @@ public class ReservationService {
         );
 
         if (!existingReservations.isEmpty()) {
-            throw new RuntimeException("El laboratorio ya está reservado en ese horario.");
+            throw new ReservationProjectException(ReservationProjectException.LABORATORY_RESERVED);
         }
 
         reservation.setId(new ObjectId());
@@ -63,7 +65,7 @@ public class ReservationService {
      */
     public Reservation getReservationById(ObjectId id) {
         return reservationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reserva no encontrada con id: " + id));
+                .orElseThrow(() -> new ReservationProjectException(ReservationProjectException.RESERVATION_NOT_FOUND + id));
     }
 
     /**
@@ -75,7 +77,7 @@ public class ReservationService {
      */
     public Reservation updateReservation(ObjectId id, Reservation reservation) {
         if (!reservationRepository.existsById(id)) {
-            throw new RuntimeException("Reserva no encontrada con id: " + id);
+            throw new ReservationProjectException(ReservationProjectException.RESERVATION_NOT_FOUND + id);
         }
         reservation.setId(id);
         return reservationRepository.save(reservation);

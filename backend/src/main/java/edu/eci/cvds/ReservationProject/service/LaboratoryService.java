@@ -1,6 +1,7 @@
 package edu.eci.cvds.ReservationProject.service;
 
 import edu.eci.cvds.ReservationProject.model.Reservation;
+import edu.eci.cvds.ReservationProject.ReservationProjectException;
 import edu.eci.cvds.ReservationProject.model.Laboratory;
 import edu.eci.cvds.ReservationProject.repository.LaboratoryRepository;
 import edu.eci.cvds.ReservationProject.repository.ReservationRepository;
@@ -54,7 +55,7 @@ public class LaboratoryService {
      */
     public Laboratory getLaboratoryById(ObjectId id) {
         return laboratoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Laboratorio no encontrado con id: " + id));
+                .orElseThrow(() -> new ReservationProjectException(ReservationProjectException.LABORATORY_NOT_FOUND + id));
     }
 
 }

@@ -30,7 +30,7 @@ public class UserController {
     }
 
     /**
-     * Crea una nueva reserva.
+     * Crea un nuevo usuario.
      *
      * @param reservation Reserva a crear.
      * @return La reserva creada con estado HTTP 201 (CREATED).
@@ -45,9 +45,9 @@ public class UserController {
     }
 
     /**
-     * Obtiene todos los laboratorios.
+     * Obtiene todos los usuarios.
      *
-     * @return Lista de reservas.
+     * @return Lista de usuarios.
      */
     @GetMapping
     public List<User> getAllUsers() {
@@ -55,14 +55,16 @@ public class UserController {
     }
 
     /**
-     * Obtiene un laboratorio por su ID.
+     * Obtiene un usuario por su ID.
      *
      * @param id ID del laboratorio.
      * @return El laboratorio encontrado.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable ObjectId id) {
+    public ResponseEntity<User> getUseryById(@PathVariable ObjectId id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
+
+
 
 }

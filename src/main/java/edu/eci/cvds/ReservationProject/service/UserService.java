@@ -36,7 +36,7 @@ public class UserService {
      */
     public User createUser(User user) {
         user.setId(new ObjectId());
-        return UserRepository.save(user);
+        return userRepository.save(user);
     }
 
     /**
@@ -54,9 +54,9 @@ public class UserService {
      * @param id Identificador de la reserva.
      * @return La reserva encontrada o una excepción si no existe.
      */
-    public User getUseryById(ObjectId id) {
-        return laboratoryRepository.findById(id)
-                .orElseThrow(() -> new ReservationProjectException(ReservationProjectException.LABORATORY_NOT_FOUND));
+    public User getUserById(ObjectId id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ReservationProjectException(ReservationProjectException.USER_NOT_FOUND));
     }
 
 }

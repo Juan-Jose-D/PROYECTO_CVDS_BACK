@@ -13,9 +13,7 @@ import org.bson.types.ObjectId;
 public class Laboratory {
 
     @Id
-    private
-
-    id;
+    private ObjectId id;
 
     @Field("name")
     private String name;

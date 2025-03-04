@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.bson.types.ObjectId;
 
-@Document(collection = "administrator")
+@Document(collection = "administradores")
 
 /**
  * Clase encargada de modelar un administrador

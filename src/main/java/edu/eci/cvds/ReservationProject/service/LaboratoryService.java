@@ -13,7 +13,7 @@ import java.util.Optional;
 
 
 /**
- * Servicio para gestionar las reservas en la aplicación.
+ * Servicio para gestionar los laboratorios en la aplicación.
  */
 @Service
 public class LaboratoryService {
@@ -26,11 +26,10 @@ public class LaboratoryService {
     }
 
     /**
-     * Crea una nueva reserva y la guarda en la base de datos.
-     * Valida que no haya conflictos de horario.
+     * Crea un nuevo laboratorio y lo guarda en la base de datos.
      *
-     * @param reservation La reserva a crear.
-     * @return La reserva guardada.
+     * @param laboratory El laboratorio a crear.
+     * @return El laboratorio guardado.
      */
     public Laboratory createLaboratory(Laboratory laboratory) {
 
@@ -39,19 +38,19 @@ public class LaboratoryService {
     }
 
     /**
-     * Obtiene todas las reservas registradas.
+     * Obtiene todos los laboratorios registrados
      *
-     * @return Lista de reservas.
+     * @return Lista de laboratorios
      */
     public List<Laboratory> getAllLaboratories() {
         return laboratoryRepository.findAll();
     }
 
     /**
-     * Busca una reserva por su ID.
+     * Busca un laboratorio por su ID.
      *
-     * @param id Identificador de la reserva.
-     * @return La reserva encontrada o una excepción si no existe.
+     * @param id Identificador del laboratorio.
+     * @return El laboratorio encontrado o una excepción si no existe.
      */
     public Laboratory getLaboratoryById(ObjectId id) {
         return laboratoryRepository.findById(id)

@@ -1,8 +1,6 @@
 package edu.eci.cvds.ReservationProject.controller;
 
-import edu.eci.cvds.ReservationProject.model.Reservation;
 import edu.eci.cvds.ReservationProject.model.Laboratory;
-import edu.eci.cvds.ReservationProject.service.ReservationService;
 import edu.eci.cvds.ReservationProject.service.LaboratoryService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;

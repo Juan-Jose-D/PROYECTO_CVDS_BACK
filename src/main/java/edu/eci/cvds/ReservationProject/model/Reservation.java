@@ -17,7 +17,7 @@ public class Reservation {
     private ObjectId id;
 
     @Field("user")
-    private String user;
+    private User user;
 
     @Field("date")
     private Date date;
@@ -37,7 +37,7 @@ public class Reservation {
     @Field("laboratory")
     private Laboratory laboratory;
 
-    public Reservation(ObjectId  id, String user, Date date, String initialTime, String finalTime, Boolean status, String purpose, Laboratory laboratory) {
+    public Reservation(ObjectId  id, User user, Date date, String initialTime, String finalTime, Boolean status, String purpose, Laboratory laboratory) {
         this.id = id;
         this.user = user;
         this.date = date;
@@ -56,11 +56,11 @@ public class Reservation {
         this.id = id;
     }
 
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

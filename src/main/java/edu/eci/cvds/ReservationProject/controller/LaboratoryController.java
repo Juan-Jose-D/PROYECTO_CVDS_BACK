@@ -1,8 +1,6 @@
 package edu.eci.cvds.ReservationProject.controller;
 
-import edu.eci.cvds.ReservationProject.model.Reservation;
 import edu.eci.cvds.ReservationProject.model.Laboratory;
-import edu.eci.cvds.ReservationProject.service.ReservationService;
 import edu.eci.cvds.ReservationProject.service.LaboratoryService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Controlador REST para gestionar las reservas.
+ * Controlador REST para gestionar los laboratorios.
  */
 @RestController
 @RequestMapping("/laboratories")
@@ -28,10 +26,10 @@ public class LaboratoryController {
     }
 
     /**
-     * Crea una nueva reserva.
+     * Crea un nuevo laboratorio.
      *
-     * @param reservation Reserva a crear.
-     * @return La reserva creada con estado HTTP 201 (CREATED).
+     * @param laboratory Laboratorio a crear.
+     * @return El laboratorio creado con estado HTTP 201 (CREATED).
      */
     @PostMapping
     public ResponseEntity<?> createLaboratory(@RequestBody Laboratory laboratory) {

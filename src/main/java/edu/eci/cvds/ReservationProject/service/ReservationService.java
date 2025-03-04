@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import edu.eci.cvds.ReservationProject.ReservationProjectException;
-import edu.eci.cvds.ReservationProject.model.Laboratory;
-
 
 /**
  * Servicio para gestionar las reservas en la aplicación.

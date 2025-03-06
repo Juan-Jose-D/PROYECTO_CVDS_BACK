@@ -31,7 +31,7 @@ public class UserService {
      * Crea una nueva reserva y la guarda en la base de datos.
      * Valida que no haya conflictos de horario.
      *
-     * @param user El usuario a crear.
+     * @param reservation La reserva a crear.
      * @return La reserva guardada.
      */
     public User createUser(User user) {

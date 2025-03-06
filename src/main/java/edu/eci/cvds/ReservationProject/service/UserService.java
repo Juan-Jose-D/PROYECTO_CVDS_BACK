@@ -59,4 +59,16 @@ public class UserService {
                 .orElseThrow(() -> new ReservationProjectException(ReservationProjectException.USER_NOT_FOUND));
     }
 
+    public User authenticate(String email, String password) {
+        // Buscar al usuario por el correo electrónico
+        User user = userRepository.findByEmail(email);
+        
+        // Si el usuario existe y la contraseña coincide, lo devolvemos
+        if (user != null && user.getPassword().equals(password)) {
+            return user; // Devolvemos el usuario con el tipo de usuario (admin o user)
+        }
+
+        return null; // Si no se encontró o la contraseña no es correcta
+    }
+
 }

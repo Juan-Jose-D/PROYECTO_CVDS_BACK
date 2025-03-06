@@ -32,10 +32,22 @@ jobs:
         with:
           name: java-app
           path: '${{ github.workspace }}/target/*.jar'
+  
+  test:
+
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Chekcout repository 
+      uses: actions/checkout@v4
+    - name: Code and run test with maven
+      run: mvn verify
+
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: test
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}

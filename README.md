@@ -4,6 +4,10 @@ El proyecto consiste en una aplicación para la gestión de reservas de laborato
 
 ![Diagrama de clases Backend](image.png)
 
+Análisis estático de código
+
+
+![AnalisisEstaticoCompleto](img.png)
 Link del proyecto en azure:
 
 [AzureDevOps Project](https://dev.azure.com/JuanJoseDiazGomez/CVDS_ReservationProject)

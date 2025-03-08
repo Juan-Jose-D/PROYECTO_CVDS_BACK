@@ -3,32 +3,29 @@ package edu.eci.cvds.ReservationProject.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import edu.eci.cvds.ReservationProject.model.Reservation;
-import edu.eci.cvds.ReservationProject.model.Laboratory;
-import edu.eci.cvds.ReservationProject.model.User;
-import edu.eci.cvds.ReservationProject.service.ReservationService;
-import edu.eci.cvds.ReservationProject.service.LaboratoryService;
+import edu.eci.cvds.ReservationProject.model.LoginRequest;
+import edu.eci.cvds.ReservationProject.model.LoginResponse;
 import edu.eci.cvds.ReservationProject.service.UserService;
-import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+
 
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/login")
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @PostMapping("/login")
+    @Autowired
+    public AuthController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        User user = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+        Object user = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
         
         if (user != null) {
-            return ResponseEntity.ok(new LoginResponse(true, user.getUserType()));
+            return ResponseEntity.ok(new LoginResponse(true, "Credenciales correctas"));    
         } else {
             return ResponseEntity.status(401).body(new LoginResponse(false, "Credenciales incorrectas"));
         }

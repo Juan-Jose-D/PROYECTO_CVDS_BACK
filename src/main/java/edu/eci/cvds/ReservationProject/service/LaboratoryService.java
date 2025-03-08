@@ -6,8 +6,12 @@ import edu.eci.cvds.ReservationProject.repository.LaboratoryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 /**
@@ -36,9 +40,9 @@ public class LaboratoryService {
     }
 
     /**
-     * Obtiene todos los laboratorios registrados
+     * Obtiene todos los laboratorios registrados.
      *
-     * @return Lista de laboratorios
+     * @return Lista de laboratorios con el ID como string.
      */
     public List<Laboratory> getAllLaboratories() {
         return laboratoryRepository.findAll();
@@ -48,11 +52,11 @@ public class LaboratoryService {
      * Busca un laboratorio por su ID.
      *
      * @param id Identificador del laboratorio.
-     * @return El laboratorio encontrado o una excepción si no existe.
+     * @return El laboratorio encontrado con el ID como string.
      */
     public Laboratory getLaboratoryById(ObjectId id) {
         return laboratoryRepository.findById(id)
-                .orElseThrow(() -> new ReservationProjectException(ReservationProjectException.LABORATORY_NOT_FOUND + id));
+            .orElseThrow(() -> new ReservationProjectException(ReservationProjectException.LABORATORY_NOT_FOUND + id));
     }
 
 }

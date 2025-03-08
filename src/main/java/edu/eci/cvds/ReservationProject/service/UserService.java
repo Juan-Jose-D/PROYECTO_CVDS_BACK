@@ -1,12 +1,10 @@
 package edu.eci.cvds.ReservationProject.service;
 
-import edu.eci.cvds.ReservationProject.model.Reservation;
 import edu.eci.cvds.ReservationProject.ReservationProjectException;
-import edu.eci.cvds.ReservationProject.model.Laboratory;
 import edu.eci.cvds.ReservationProject.model.User;
-import edu.eci.cvds.ReservationProject.repository.LaboratoryRepository;
-import edu.eci.cvds.ReservationProject.repository.ReservationRepository;
+import edu.eci.cvds.ReservationProject.model.Admin;
 import edu.eci.cvds.ReservationProject.repository.UserRepository;
+import edu.eci.cvds.ReservationProject.repository.AdminRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +19,12 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, AdminRepository adminRepository) {
         this.userRepository = userRepository;
+        this.adminRepository = adminRepository;
     }
 
     /**
@@ -59,16 +59,17 @@ public class UserService {
                 .orElseThrow(() -> new ReservationProjectException(ReservationProjectException.USER_NOT_FOUND));
     }
 
-    public User authenticate(String email, String password) {
-        // Buscar al usuario por el correo electrónico
-        User user = userRepository.findByEmail(email);
-        
-        // Si el usuario existe y la contraseña coincide, lo devolvemos
-        if (user != null && user.getPassword().equals(password)) {
-            return user; // Devolvemos el usuario con el tipo de usuario (admin o user)
+
+    public Object authenticate(String email, String password) {
+        Optional<User> user = userRepository.findByEmail(email);
+        Optional<Admin> admin = adminRepository.findByEmail(email);
+        if (admin.isPresent() && admin.get().getPassword().equals(password)) {
+            return admin.get();
+        } else if (user.isPresent() && user.get().getPassword().equals(password)) {
+            return user.get();
         }
 
-        return null; // Si no se encontró o la contraseña no es correcta
+        return null;
     }
 
 }

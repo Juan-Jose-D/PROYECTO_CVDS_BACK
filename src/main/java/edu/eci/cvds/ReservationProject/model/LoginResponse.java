@@ -3,11 +3,10 @@ package edu.eci.cvds.ReservationProject.model;
 // Clase que representa la respuesta del login
 public class LoginResponse {
     private boolean success;
-    private String userType;
+    private String message;
 
-    public LoginResponse(boolean success, String userType) {
+    public LoginResponse(boolean success, String message) {
         this.success = success;
-        this.userType = userType;
     }
 
     // Getters y setters
@@ -20,10 +19,10 @@ public class LoginResponse {
     }
 
     public String getUserType() {
-        return userType;
+        return message;
     }
 
-    public void setUserType(String userType) {
-        this.userType = userType;
+    public void setUserType(String message) {
+        this.message = message;
     }
 }

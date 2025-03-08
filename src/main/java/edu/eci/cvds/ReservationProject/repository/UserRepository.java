@@ -36,6 +36,6 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
      * @param email correo electronico del usuario.
      * @return Lista de usuarios con el correo electronico.
      */
-    List<User> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
 }

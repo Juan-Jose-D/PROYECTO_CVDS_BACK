@@ -3,6 +3,11 @@ package edu.eci.cvds.ReservationProject.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import org.bson.types.ObjectId;
 
 @Document(collection = "laboratorios")
@@ -13,6 +18,7 @@ import org.bson.types.ObjectId;
 public class Laboratory {
 
     @Id
+    @JsonSerialize(using = ObjectIdSerializer.class)
     private ObjectId id;
 
     @Field("name")

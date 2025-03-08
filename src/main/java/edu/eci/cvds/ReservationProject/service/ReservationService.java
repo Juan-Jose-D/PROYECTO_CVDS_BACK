@@ -1,5 +1,6 @@
 package edu.eci.cvds.ReservationProject.service;
 
+import edu.eci.cvds.ReservationProject.model.Laboratory;
 import edu.eci.cvds.ReservationProject.model.Reservation;
 import edu.eci.cvds.ReservationProject.repository.ReservationRepository;
 import org.bson.types.ObjectId;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.Date;
 
 import edu.eci.cvds.ReservationProject.ReservationProjectException;
 
@@ -17,10 +19,12 @@ import edu.eci.cvds.ReservationProject.ReservationProjectException;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final LaboratoryService laboratoryService;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, LaboratoryService laboratoryService) {
         this.reservationRepository = reservationRepository;
+        this.laboratoryService = laboratoryService;
     }
 
     /**
@@ -43,8 +47,10 @@ public class ReservationService {
         }
 
         reservation.setId(new ObjectId());
+        reservation.setStatus(true);
         return reservationRepository.save(reservation);
     }
+
 
     /**
      * Obtiene todas las reservas registradas.

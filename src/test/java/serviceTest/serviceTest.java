@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -193,4 +194,38 @@ public class serviceTest {
         when(adminRepository.findById(id)).thenReturn(Optional.empty());
         assertThrows(ReservationProjectException.class, () -> adminService.getAdminById(id));
     }
+
+    @Test
+    void shouldAuthenticateAsAdmin() {
+        when(adminRepository.findByEmail(admin.getEmail())).thenReturn(Optional.of(admin));
+        Object result = userService.authenticate(admin.getEmail(), admin.getPassword());
+        assertNotNull(result);
+        assertTrue(result instanceof Admin);
+        assertEquals(admin.getEmail(), ((Admin) result).getEmail());
+    }
+
+    @Test
+    void shouldAuthenticateAsUser() {
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        Object result = userService.authenticate(user.getEmail(), user.getPassword());
+        assertNotNull(result);
+        assertTrue(result instanceof User);
+        assertEquals(user.getEmail(), ((User) result).getEmail());
+    }
+
+    @Test
+    void shouldReturnNullForInvalidCredentials() {
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        Object result = userService.authenticate(user.getEmail(), "wrongPassword");
+        assertNull(result);
+    }
+
+    @Test
+    void shouldReturnNullForNonExistentEmail() {
+        when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
+        when(adminRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
+        Object result = userService.authenticate("nonexistent@example.com", "password123");
+        assertNull(result);
+    }
+
 }

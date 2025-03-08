@@ -7,12 +7,15 @@ import edu.eci.cvds.ReservationProject.model.*;
 
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
-
-
-
 import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
+import org.mockito.Mockito;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import java.util.Date;
+import java.io.IOException;
 
 @SpringBootTest
 class modelTest {
@@ -125,6 +128,57 @@ class modelTest {
         assertFalse(res.getStatus());
         assertEquals("Defensa de tesis", res.getPurpose());
         assertNotNull(res.getLaboratory());
+    }
+
+        @Test
+        void testSerialize() throws IOException {
+            ObjectIdSerializer serializer = new ObjectIdSerializer();
+            JsonGenerator jsonGenerator = Mockito.mock(JsonGenerator.class);
+            SerializerProvider serializerProvider = Mockito.mock(SerializerProvider.class);
+            ObjectId objectId = new ObjectId("6566a7e5b4d2f14a3f5e78b1");
+
+            serializer.serialize(objectId, jsonGenerator, serializerProvider);
+
+            Mockito.verify(jsonGenerator).writeString("6566a7e5b4d2f14a3f5e78b1");
+        }
+
+        @Test
+        void testDeserialize() throws IOException {
+            ObjectIdDeserializer deserializer = new ObjectIdDeserializer();
+            JsonParser jsonParser = Mockito.mock(JsonParser.class);
+            DeserializationContext context = Mockito.mock(DeserializationContext.class);
+
+            Mockito.when(jsonParser.getText()).thenReturn("6566a7e5b4d2f14a3f5e78b1");
+            ObjectId result = deserializer.deserialize(jsonParser, context);
+
+            assertEquals("6566a7e5b4d2f14a3f5e78b1", result.toHexString());
+        }
+
+        @Test
+        void testLoginRequestGettersAndSetters() {
+            LoginRequest loginRequest = new LoginRequest();
+            loginRequest.setEmail("test@example.com");
+            loginRequest.setPassword("password123");
+    
+            assertEquals("test@example.com", loginRequest.getEmail());
+            assertEquals("password123", loginRequest.getPassword());
+        }
+
+    @Test
+    void testLoginResponseConstructor() {
+        LoginResponse response = new LoginResponse(true, "Admin");
+
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    void testLoginResponseGettersAndSetters() {
+        LoginResponse response = new LoginResponse(false, "");
+        response.setSuccess(true);
+        response.setUserType("User");
+
+        assertTrue(response.isSuccess());
+        assertEquals("User", response.getUserType());
     }
 
 

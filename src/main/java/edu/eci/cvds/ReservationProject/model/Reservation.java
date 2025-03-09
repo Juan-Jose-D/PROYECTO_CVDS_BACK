@@ -1,13 +1,15 @@
 package edu.eci.cvds.ReservationProject.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.*;
 import org.bson.types.ObjectId;
+import javax.validation.constraints.Pattern;
 
 @Document(collection = "reservas")
-
+@CompoundIndex(def = "{'laboratory.id': 1, 'date': 1}")
 /*
  * Clase encargada de modelar una reserva
  */
@@ -23,9 +25,11 @@ public class Reservation {
     private Date date;
 
     @Field("initialTime")
+    @Pattern(regexp = "^([0-1][0-9]|2[0-3]):[0-5][0-9]$")
     private String initialTime;
 
     @Field("finalTime")
+    @Pattern(regexp = "^([0-1][0-9]|2[0-3]):[0-5][0-9]$")
     private String finalTime;
 
     @Field("status")

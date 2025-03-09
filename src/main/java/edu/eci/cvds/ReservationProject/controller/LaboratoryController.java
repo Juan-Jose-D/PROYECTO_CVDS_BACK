@@ -2,12 +2,16 @@ package edu.eci.cvds.ReservationProject.controller;
 
 import edu.eci.cvds.ReservationProject.model.Laboratory;
 import edu.eci.cvds.ReservationProject.service.LaboratoryService;
+import edu.eci.cvds.ReservationProject.service.ReservationService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +25,6 @@ public class LaboratoryController {
     private final LaboratoryService laboratoryService;
 
 
-    @Autowired
     public LaboratoryController(LaboratoryService laboratoryService) {
         this.laboratoryService = laboratoryService;
     }
@@ -62,4 +65,4 @@ public class LaboratoryController {
         return ResponseEntity.ok(laboratoryService.getLaboratoryById(id));
     }
 
-}
+}   

@@ -1,10 +1,13 @@
 package edu.eci.cvds.ReservationProject.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+
 import java.util.List;
 import java.util.Optional;
 import org.bson.types.ObjectId;
 import edu.eci.cvds.ReservationProject.model.Laboratory;
+import edu.eci.cvds.ReservationProject.model.Reservation;
 
 /**
  * Repositorio para gestionar las operaciones CRUD de los laboratorios en la
@@ -53,4 +56,5 @@ public interface LaboratoryRepository extends MongoRepository<Laboratory, Object
      * @return Lista de laboratorios en la ubicación especificada.
      */
     List<Laboratory> findByLocation(String location);
+
 }

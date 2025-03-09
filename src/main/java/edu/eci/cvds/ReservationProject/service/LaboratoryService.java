@@ -2,11 +2,15 @@ package edu.eci.cvds.ReservationProject.service;
 
 import edu.eci.cvds.ReservationProject.ReservationProjectException;
 import edu.eci.cvds.ReservationProject.model.Laboratory;
+import edu.eci.cvds.ReservationProject.model.Reservation;
 import edu.eci.cvds.ReservationProject.repository.LaboratoryRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;

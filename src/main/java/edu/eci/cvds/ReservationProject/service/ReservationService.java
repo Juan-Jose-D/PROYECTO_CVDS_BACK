@@ -8,6 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 import edu.eci.cvds.ReservationProject.ReservationProjectException;
@@ -95,4 +100,44 @@ public class ReservationService {
     public void deleteReservation(ObjectId id) {
         reservationRepository.deleteById(id);
     }
+
+
+        /**
+     * Verifica si un laboratorio está disponible para una fecha y hora específica.
+     * 
+     * @param laboratoryId ID del laboratorio a verificar.
+     * @param date Fecha para la consulta.
+     * @param time Hora para la consulta.
+     * @return true si el laboratorio está disponible, false si no.
+     */
+    public boolean isLaboratoryAvailable(ObjectId laboratoryId, LocalDate date, LocalTime time) {
+
+    if (laboratoryId == null || date == null || time == null) {
+        throw new IllegalArgumentException("Los parámetros no pueden ser nulos.");
+    }
+
+    Date queryDate = Date.from(date.atStartOfDay(ZoneId.of("UTC")).toInstant());
+    List<Reservation> reservations = reservationRepository.findByLaboratoryIdAndDate(laboratoryId, queryDate);
+
+    if (reservations.isEmpty()) {
+        return true;
+    }
+
+    for (Reservation reservation : reservations) {
+        try {
+            LocalTime reservationStart = LocalTime.parse(reservation.getInitialTime());
+            LocalTime reservationEnd = LocalTime.parse(reservation.getFinalTime());
+
+            if ((time.isAfter(reservationStart) || time.equals(reservationStart)) 
+                && (time.isBefore(reservationEnd) || time.equals(reservationEnd))) {
+                return false;
+        }
+        } catch (DateTimeParseException e) {
+            System.err.println("Error al parsear la hora: " + e.getMessage());
+            return false;
+        }
+    }
+
+    return true;
+}
 }

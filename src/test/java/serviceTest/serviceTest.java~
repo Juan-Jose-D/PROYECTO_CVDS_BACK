@@ -98,7 +98,7 @@ class serviceTest {
         verify(reservationRepository, times(1)).deleteById(id);
 
         when(reservationRepository.findById(id)).thenReturn(Optional.empty());
-        assertThrows(ReservationProjectException.class, () -> reservationService.getReservationById(id));
+        assertNull(reservationService.getReservationById(id));
     }
 
     @Test

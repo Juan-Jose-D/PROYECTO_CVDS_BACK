@@ -23,8 +23,7 @@ public class ReservationProjectApplication {
                 @Override
                 public void addCorsMappings(CorsRegistry registry) {
                     registry.addMapping("/**") // Permite CORS en todas las rutas
-                            .allowedOrigins("http://127.0.0.1:5500") // Origen permitido (cambia esto al origen de tu frontend)
-                            .allowedOrigins("http://127.0.0.1:3000") 
+                            .allowedOrigins("http://127.0.0.1:5500", "http://localhost:3000") // Origen permitido (cambia esto al origen de tu frontend) 
                             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
                             .allowedHeaders("*") // Cabeceras permitidas
                             .allowCredentials(true); // Permite credenciales (cookies, tokens, etc.)

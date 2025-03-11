@@ -147,7 +147,8 @@ public class ReservationService {
      * Genera "proceduralmente" nuevas reservas, aleatoriamente serán entre 100 y
      * 1000 (Corresponden a las reservas de los laboratorios).
      */
-    public void createRandomReservationsInRange(Random random){
+    public void createRandomReservationsInRange(){
+        Random random = new Random();
         int numberOfReservations = random.nextInt(901) + 100;
 
         for (int i = 0; i < numberOfReservations; i++) {

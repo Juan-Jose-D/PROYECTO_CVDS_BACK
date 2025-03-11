@@ -1,5 +1,7 @@
 package edu.eci.cvds.ReservationProject.repository;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+
 import java.util.Date;
 
 import java.util.List;
@@ -32,4 +34,14 @@ public interface ReservationRepository extends MongoRepository<Reservation, Obje
      */
     List<Reservation> findByDateAndInitialTimeLessThanEqualAndFinalTimeGreaterThanEqualAndLaboratory(
             Date date, String finalTime, String initialTime, Laboratory laboratory);
+
+        /**
+     * Busca reservas por ID de laboratorio y fecha.
+     * 
+     * @param laboratoryId ID del laboratorio.
+     * @param date Fecha de la reserva en formato String.
+     * @return Lista de reservas que coinciden con los criterios.
+     */
+    @Query("{'laboratory.id': ?0, 'date': ?1}")
+    List<Reservation> findByLaboratoryIdAndDate(ObjectId laboratoryId, Date date);
 }

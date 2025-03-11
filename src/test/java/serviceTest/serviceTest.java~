@@ -285,9 +285,14 @@ class serviceTest {
 
         LaboratoryService laboratoryService2 = mock(LaboratoryService.class);
         ReservationRepository reservationRepository2 = mock(ReservationRepository.class);
+
+
         ReservationService reservationService2 = new ReservationService(reservationRepository2, laboratoryService2);
 
         Random randomMock = mock(Random.class);
+
+
+
         reservationService2.createRandomReservationsInRange(randomMock);
 
         verify(reservationRepository2, atLeast(100)).save(any(Reservation.class));

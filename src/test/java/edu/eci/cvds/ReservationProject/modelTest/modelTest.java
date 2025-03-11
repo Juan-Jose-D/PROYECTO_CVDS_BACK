@@ -103,7 +103,7 @@ class modelTest {
         Date date = new Date();
         Laboratory lab = new Laboratory(new ObjectId(), "Lab Harkonnen", 20, "Giedi Prime", "Hacking y ciberseguridad", true, "Redes y servidores");
 
-        Reservation res = new Reservation(id, "Rabban Harkonnen", date, "08:00", "10:00", true, "Investigación", lab);
+        Reservation res = new Reservation(id, "Rabban Harkonnen", date, "08:00", "10:00", true, "Investigación", 5, lab);
 
         assertEquals(id, res.getId());
         assertEquals("Rabban Harkonnen", res.getUser());

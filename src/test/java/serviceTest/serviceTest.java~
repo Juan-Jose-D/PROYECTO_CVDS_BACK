@@ -39,6 +39,9 @@ class serviceTest {
     @InjectMocks
     private UserService userService;
 
+
+
+    private Random random;
     private Admin admin;
     private Laboratory laboratory;
     private Reservation reservation;
@@ -47,11 +50,12 @@ class serviceTest {
 
     @BeforeEach
     void setUp() {
+        random = new Random();
         id = new ObjectId();
         admin = new Admin(new ObjectId(), "Jessica", "jessica@bene-gesserit.com", "litany123");
         laboratory = new Laboratory(new ObjectId(), "AI Lab", 30, "Building A", "Advanced AI research", true, "PCs, GPUs");
         user = new User(new ObjectId(), "John Doe", "john.doe@example.com", "password123");
-        reservation = new Reservation(new ObjectId(), "John Doe", null, "10:00", "12:00", true, "Research", laboratory);
+        reservation = new Reservation(new ObjectId(), "John Doe", null, "10:00", "12:00", true, "Research", 5, laboratory);
     }
 
     // test required in Lab 5 (Dado que no hay ninguna reserva registrada, Cuándo la consulto a nivel de servicio,
@@ -98,7 +102,7 @@ class serviceTest {
         verify(reservationRepository, times(1)).deleteById(id);
 
         when(reservationRepository.findById(id)).thenReturn(Optional.empty());
-        assertNull(reservationService.getReservationById(id));
+        assertThrows(ReservationProjectException.class, () -> reservationService.getReservationById(id));
     }
 
     @Test
@@ -274,6 +278,25 @@ class serviceTest {
         when(adminRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
         Object result = userService.authenticate("nonexistent@example.com", "password123");
         assertNull(result);
+    }
+
+    @Test
+    void testCreateRandomReservationsInRange() {
+
+        LaboratoryService laboratoryService2 = mock(LaboratoryService.class);
+        ReservationRepository reservationRepository2 = mock(ReservationRepository.class);
+
+
+        ReservationService reservationService2 = new ReservationService(reservationRepository2, laboratoryService2);
+
+        Random randomMock = mock(Random.class);
+
+
+
+        reservationService2.createRandomReservationsInRange(randomMock);
+
+        verify(reservationRepository2, atLeast(100)).save(any(Reservation.class));
+        verify(reservationRepository2, atMost(1000)).save(any(Reservation.class));
     }
 
 }

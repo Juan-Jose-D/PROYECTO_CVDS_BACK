@@ -53,7 +53,7 @@ class controllerTest {
     @BeforeEach
     void setUp() {
         testLab = new Laboratory(new ObjectId(), "AI Lab", 30, "Building A", "Advanced AI research", true, "PCs, GPUs");
-        testReservation = new Reservation(new ObjectId(), "John Doe", null, "10:00", "12:00", true, "Research", testLab);
+        testReservation = new Reservation(new ObjectId(), "John Doe", null, "10:00", "12:00", true, "Research", 5, testLab);
         testUser = new User(new ObjectId(), "John Doe", "john.doe@example.com", "password123");
         admin = new Admin(new ObjectId(), "Jessica", "jessica@bene-gesserit.com", "litany123");
     }

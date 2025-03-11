@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.*;
 import org.bson.types.ObjectId;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 @Document(collection = "reservas")
@@ -38,10 +41,18 @@ public class Reservation {
     @Field("purpose")
     private String purpose;
 
+    @Field("priority")
+    @Min(1)
+    @Max(5)
+    private int priority;
+
     @Field("laboratory")
     private Laboratory laboratory;
 
-    public Reservation(ObjectId  id, String user, Date date, String initialTime, String finalTime, Boolean status, String purpose, Laboratory laboratory) {
+
+    public Reservation() {}
+
+    public Reservation(ObjectId  id, String user, Date date, String initialTime, String finalTime, Boolean status, String purpose,int priority, Laboratory laboratory) {
         this.id = id;
         this.user = user;
         this.date = date;
@@ -49,7 +60,19 @@ public class Reservation {
         this.finalTime = finalTime;
         this.status = status;
         this.purpose = purpose;
+        this.priority = priority;
         this.laboratory = laboratory;
+    }
+
+
+    @Min(1)
+    @Max(5)
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(@Min(1) @Max(5) int priority) {
+        this.priority = priority;
     }
 
     public ObjectId getId() {

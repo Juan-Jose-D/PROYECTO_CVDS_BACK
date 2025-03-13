@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -308,6 +309,19 @@ class controllerTest {
     }
 
     @Test
+    void testCheckAvailability_InternalServerError() {
+        when(reservationService.isLaboratoryAvailable(any(), any(), any()))
+                .thenThrow(new RuntimeException("Simulación de error interno"));
+
+        ResponseEntity<?> response = reservationController.checkAvailability(labId, date, time);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        Map<?, ?> responseBody = (Map<?, ?>) response.getBody();
+        assertNotNull(responseBody);
+        assertTrue(responseBody.get("message").toString().contains("Error al verificar disponibilidad"));
+    }
+
+    @Test
     void testUpdateReservation_Success() {
         when(reservationService.updateReservation(any(ObjectId.class), any(Reservation.class)))
                 .thenReturn(testReservation);
@@ -317,59 +331,4 @@ class controllerTest {
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(testReservation, response.getBody());
     }
-
-    @Test
-    void testLogin_Success() {
-        // Arrange
-        LoginRequest request = new LoginRequest();
-        request.setEmail("usuario@example.com");
-        request.setPassword("123456");
-
-        User mockUser = new User(new ObjectId(), "Usuario Ejemplo", "usuario@example.com", "123456");
-
-        when(userService.authenticate(request.getEmail(), request.getPassword())).thenReturn(mockUser);
-
-        // Act
-        ResponseEntity<?> response = userController.login(request);
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertTrue(((LoginResponse) response.getBody()).isSuccess());
-        assertEquals("Credenciales correctas", ((LoginResponse) response.getBody()).getMessage());
-    }
-
-    @Test
-    void testLogin_InvalidCredentials() {
-        // Arrange
-        LoginRequest request = new LoginRequest();
-        request.setEmail("usuario@example.com");
-        request.setPassword("contraseñaIncorrecta");
-
-        when(userService.authenticate(request.getEmail(), request.getPassword())).thenReturn(null);
-
-        // Act
-        ResponseEntity<?> response = userController.login(request);
-
-        // Assert
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertFalse(((LoginResponse) response.getBody()).isSuccess());
-        assertEquals("Credenciales incorrectas", ((LoginResponse) response.getBody()).getMessage());
-    }
-
-    @Test
-    void testLogin_MissingFields() {
-        // Arrange
-        LoginRequest request = new LoginRequest();
-        request.setEmail(null);
-        request.setPassword(null);
-
-        // Act
-        ResponseEntity<?> response = userController.login(request);
-
-        // Assert
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertFalse(((LoginResponse) response.getBody()).isSuccess());
-        assertEquals("Email y contraseña son obligatorios", ((LoginResponse) response.getBody()).getMessage());
-    }
-
 }

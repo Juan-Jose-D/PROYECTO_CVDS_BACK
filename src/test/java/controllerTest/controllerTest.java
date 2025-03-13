@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -305,6 +306,23 @@ class controllerTest {
         assertEquals(400, response.getStatusCodeValue());
         assertEquals("Formato de fecha u hora inválido. Use yyyy-MM-dd y HH:mm.",
                 ((Map<?, ?>) response.getBody()).get("message"));
+    }
+
+    @Test
+    void testCheckAvailability_InternalServerError() {
+        String labId = new ObjectId().toString();
+        String date = "2025-03-08";
+        String time = "10:00";
+
+        when(reservationService.isLaboratoryAvailable(any(), any(), any()))
+                .thenThrow(new RuntimeException("Simulación de error interno"));
+
+        ResponseEntity<?> response = reservationController.checkAvailability(labId, date, time);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        Map<?, ?> responseBody = (Map<?, ?>) response.getBody();
+        assertNotNull(responseBody);
+        assertTrue(responseBody.get("message").toString().contains("Error al verificar disponibilidad"));
     }
 
     @Test

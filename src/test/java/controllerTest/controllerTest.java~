@@ -317,4 +317,59 @@ class controllerTest {
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(testReservation, response.getBody());
     }
+
+    @Test
+    void testLogin_Success() {
+        // Arrange
+        LoginRequest request = new LoginRequest();
+        request.setEmail("usuario@example.com");
+        request.setPassword("123456");
+
+        User mockUser = new User(new ObjectId(), "Usuario Ejemplo", "usuario@example.com", "123456");
+
+        when(userService.authenticate(request.getEmail(), request.getPassword())).thenReturn(mockUser);
+
+        // Act
+        ResponseEntity<?> response = userController.login(request);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(((LoginResponse) response.getBody()).isSuccess());
+        assertEquals("Credenciales correctas", ((LoginResponse) response.getBody()).getMessage());
+    }
+
+    @Test
+    void testLogin_InvalidCredentials() {
+        // Arrange
+        LoginRequest request = new LoginRequest();
+        request.setEmail("usuario@example.com");
+        request.setPassword("contraseñaIncorrecta");
+
+        when(userService.authenticate(request.getEmail(), request.getPassword())).thenReturn(null);
+
+        // Act
+        ResponseEntity<?> response = userController.login(request);
+
+        // Assert
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertFalse(((LoginResponse) response.getBody()).isSuccess());
+        assertEquals("Credenciales incorrectas", ((LoginResponse) response.getBody()).getMessage());
+    }
+
+    @Test
+    void testLogin_MissingFields() {
+        // Arrange
+        LoginRequest request = new LoginRequest();
+        request.setEmail(null);
+        request.setPassword(null);
+
+        // Act
+        ResponseEntity<?> response = userController.login(request);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertFalse(((LoginResponse) response.getBody()).isSuccess());
+        assertEquals("Email y contraseña son obligatorios", ((LoginResponse) response.getBody()).getMessage());
+    }
+
 }

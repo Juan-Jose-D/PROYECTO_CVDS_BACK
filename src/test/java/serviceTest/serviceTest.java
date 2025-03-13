@@ -11,6 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,6 +50,8 @@ class serviceTest {
     private Reservation reservation;
     private User user;
     private ObjectId id;
+    private LocalDate date;
+    private LocalTime time;
 
     @BeforeEach
     void setUp() {
@@ -56,6 +61,8 @@ class serviceTest {
         laboratory = new Laboratory(new ObjectId(), "AI Lab", 30, "Building A", "Advanced AI research", true, "PCs, GPUs");
         user = new User(new ObjectId(), "John Doe", "john.doe@example.com", "password123");
         reservation = new Reservation(new ObjectId(), "John Doe", null, "10:00", "12:00", true, "Research", 5, laboratory);
+        date = LocalDate.of(2025, 3, 10);
+        time = LocalTime.of(10, 0);
     }
 
     // test required in Lab 5 (Dado que no hay ninguna reserva registrada, Cuándo la consulto a nivel de servicio,
@@ -292,6 +299,61 @@ class serviceTest {
 
         verify(reservationRepository2, atLeast(100)).save(any(Reservation.class));
         verify(reservationRepository2, atMost(1000)).save(any(Reservation.class));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenParametersAreNull() {
+        assertThrows(IllegalArgumentException.class, () -> reservationService.isLaboratoryAvailable(null, date, time));
+        assertThrows(IllegalArgumentException.class, () -> reservationService.isLaboratoryAvailable(id, null, time));
+        assertThrows(IllegalArgumentException.class, () -> reservationService.isLaboratoryAvailable(id, date, null));
+    }
+
+    @Test
+    void shouldReturnTrueWhenNoReservationsExist() {
+        when(reservationRepository.findByLaboratoryIdAndDate(eq(id), any(Date.class)))
+                .thenReturn(Collections.emptyList());
+
+        boolean result = reservationService.isLaboratoryAvailable(id, date, time);
+        assertTrue(result);
+    }
+
+    @Test
+    void shouldReturnTrueWhenReservationsExistButTimeDoesNotOverlap() {
+        Reservation reservation = new Reservation();
+        reservation.setInitialTime("12:00");
+        reservation.setFinalTime("14:00");
+
+        when(reservationRepository.findByLaboratoryIdAndDate(eq(id), any(Date.class)))
+                .thenReturn(List.of(reservation));
+
+        boolean result = reservationService.isLaboratoryAvailable(id, date, time);
+        assertTrue(result);
+    }
+
+    @Test
+    void shouldReturnFalseWhenTimeOverlapsWithExistingReservation() {
+        Reservation reservation = new Reservation();
+        reservation.setInitialTime("09:00");
+        reservation.setFinalTime("11:00");
+
+        when(reservationRepository.findByLaboratoryIdAndDate(eq(id), any(Date.class)))
+                .thenReturn(List.of(reservation));
+
+        boolean result = reservationService.isLaboratoryAvailable(id, date, time);
+        assertFalse(result);
+    }
+
+    @Test
+    void shouldReturnFalseWhenReservationTimeParsingFails() {
+        Reservation reservation = new Reservation();
+        reservation.setInitialTime("invalid");
+        reservation.setFinalTime("invalid");
+
+        when(reservationRepository.findByLaboratoryIdAndDate(eq(id), any(Date.class)))
+                .thenReturn(List.of(reservation));
+
+        boolean result = reservationService.isLaboratoryAvailable(id, date, time);
+        assertFalse(result);
     }
 
 }

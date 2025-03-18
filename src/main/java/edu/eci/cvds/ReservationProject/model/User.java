@@ -25,14 +25,18 @@ public class User {
     @Field("password")
     private String password;
 
+    @Field("role")
+    private String role;
+
 
     public User() {}
 
-    public User(ObjectId id, String name, String email, String password) {
+    public User(ObjectId id, String name, String email, String password, String role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public ObjectId getId() {
@@ -65,6 +69,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
 

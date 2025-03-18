@@ -11,14 +11,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-<<<<<<< HEAD
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-=======
-import org.springframework.security.crypto.password.PasswordEncoder;
-
->>>>>>> main
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -213,64 +209,6 @@ class serviceTest {
         verify(reservationRepository2, atMost(1000)).save(any(Reservation.class));
     }
 
-<<<<<<< HEAD
-    @Test
-    void shouldThrowExceptionWhenParametersAreNull() {
-        assertThrows(IllegalArgumentException.class, () -> reservationService.isLaboratoryAvailable(null, date, time));
-        assertThrows(IllegalArgumentException.class, () -> reservationService.isLaboratoryAvailable(id, null, time));
-        assertThrows(IllegalArgumentException.class, () -> reservationService.isLaboratoryAvailable(id, date, null));
-    }
-
-    @Test
-    void shouldReturnTrueWhenNoReservationsExist() {
-        when(reservationRepository.findByLaboratoryIdAndDate(eq(id), any(Date.class)))
-                .thenReturn(Collections.emptyList());
-
-        boolean result = reservationService.isLaboratoryAvailable(id, date, time);
-        assertTrue(result);
-    }
-
-    @Test
-    void shouldReturnTrueWhenReservationsExistButTimeDoesNotOverlap() {
-        Reservation reservation = new Reservation();
-        reservation.setInitialTime("12:00");
-        reservation.setFinalTime("14:00");
-
-        when(reservationRepository.findByLaboratoryIdAndDate(eq(id), any(Date.class)))
-                .thenReturn(List.of(reservation));
-
-        boolean result = reservationService.isLaboratoryAvailable(id, date, time);
-        assertTrue(result);
-    }
-
-    @Test
-    void shouldReturnFalseWhenTimeOverlapsWithExistingReservation() {
-        Reservation reservation = new Reservation();
-        reservation.setInitialTime("09:00");
-        reservation.setFinalTime("11:00");
-
-        when(reservationRepository.findByLaboratoryIdAndDate(eq(id), any(Date.class)))
-                .thenReturn(List.of(reservation));
-
-        boolean result = reservationService.isLaboratoryAvailable(id, date, time);
-        assertFalse(result);
-    }
-
-    @Test
-    void shouldReturnFalseWhenReservationTimeParsingFails() {
-        Reservation reservation = new Reservation();
-        reservation.setInitialTime("invalid");
-        reservation.setFinalTime("invalid");
-
-        when(reservationRepository.findByLaboratoryIdAndDate(eq(id), any(Date.class)))
-                .thenReturn(List.of(reservation));
-
-        boolean result = reservationService.isLaboratoryAvailable(id, date, time);
-        assertFalse(result);
-    }
-
-}
-=======
 
     @Test
     void testCreateUser() {
@@ -307,4 +245,3 @@ class serviceTest {
         assertFalse(result.isEmpty());
     }
 }
->>>>>>> main

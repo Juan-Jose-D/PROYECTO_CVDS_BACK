@@ -14,15 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.junit.jupiter.api.BeforeEach;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class controllerTest {
-
-    @Mock
-    private AdminService adminService;
 
     @Mock
     private LaboratoryService laboratoryService;
@@ -32,9 +30,6 @@ class controllerTest {
 
     @Mock
     private UserService userService;
-
-    @InjectMocks
-    private AdminController adminController;
 
     @InjectMocks
     private LaboratoryController laboratoryController;
@@ -48,82 +43,89 @@ class controllerTest {
     private Laboratory testLab;
     private Reservation testReservation;
     private User testUser;
-    private Admin admin;
 
     @BeforeEach
     void setUp() {
         testLab = new Laboratory(new ObjectId(), "AI Lab", 30, "Building A", "Advanced AI research", true, "PCs, GPUs");
         testReservation = new Reservation(new ObjectId(), "John Doe", null, "10:00", "12:00", true, "Research", 5, testLab);
-        testUser = new User(new ObjectId(), "John Doe", "john.doe@example.com", "password123");
-        admin = new Admin(new ObjectId(), "Jessica", "jessica@bene-gesserit.com", "litany123");
+        testUser = new User(new ObjectId(), "John Doe", "john.doe@example.com", "password123", "USER");
+    }
+
+    // UserController Tests
+    @Test
+    void testCreateUser_Success() {
+        when(userService.createUser(any(User.class))).thenReturn(testUser);
+        ResponseEntity<?> response = userController.createUser(testUser);
+        assertEquals(201, response.getStatusCodeValue());
+        assertEquals(testUser, response.getBody());
+    }
+
+    @Test
+    void testCreateUser_Conflict() {
+        when(userService.createUser(any(User.class)))
+                .thenThrow(new RuntimeException("User already exists"));
+
+        ResponseEntity<?> response = userController.createUser(testUser);
+
+        assertEquals(409, response.getStatusCodeValue());
+        assertEquals("User already exists", response.getBody());
     }
 
     @Test
     void testCreateAdmin_Success() {
-        when(adminService.createAdmin(any(Admin.class))).thenReturn(admin);
+        User adminUser = new User(new ObjectId(), "Admin User", "admin@example.com", "admin123", "ADMIN");
+        when(userService.createUser(any(User.class))).thenReturn(adminUser);
 
-        ResponseEntity<?> response = adminController.createAdmin(admin);
+        ResponseEntity<?> response = userController.createAdmin(adminUser);
 
         assertEquals(201, response.getStatusCodeValue());
-        assertEquals(admin, response.getBody());
+        assertEquals(adminUser, response.getBody());
     }
 
     @Test
     void testCreateAdmin_Conflict() {
-        when(adminService.createAdmin(any(Admin.class))).thenThrow(new RuntimeException("Admin already exists"));
+        User adminUser = new User(new ObjectId(), "Admin User", "admin@example.com", "admin123", "ADMIN");
+        when(userService.createUser(any(User.class)))
+                .thenThrow(new RuntimeException("User already exists"));
 
-        ResponseEntity<?> response = adminController.createAdmin(admin);
+        ResponseEntity<?> response = userController.createAdmin(adminUser);
 
         assertEquals(409, response.getStatusCodeValue());
-        assertEquals("Admin already exists", response.getBody());
+        assertEquals("User already exists", response.getBody());
+    }
+
+    @Test
+    void testGetAllUsers() {
+        when(userService.getAllUsers()).thenReturn(Arrays.asList(testUser));
+        List<User> users = userController.getAllUsers();
+        assertEquals(1, users.size());
+        assertEquals("John Doe", users.get(0).getName());
+    }
+
+    @Test
+    void testGetUserById() {
+        when(userService.getUserById(any())).thenReturn(testUser);
+        ResponseEntity<User> response = userController.getUserById(testUser.getId());
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(testUser, response.getBody());
+    }
+
+    @Test
+    void testGetUserByEmail() {
+        when(userService.getUserByEmail(any())).thenReturn(Optional.of(testUser));
+        ResponseEntity<User> response = userController.getUserByEmail(testUser.getEmail());
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(testUser, response.getBody());
     }
 
     @Test
     void testGetAllAdmins() {
-        List<Admin> admins = Arrays.asList(
-                new Admin(new ObjectId(), "Jessica", "jessica@bene-gesserit.com", "litany123"),
-                new Admin(new ObjectId(), "Paul", "paul@atreides.com", "dune123")
-        );
-        when(adminService.getAllAdmins()).thenReturn(admins);
+        User adminUser = new User(new ObjectId(), "Admin User", "admin@example.com", "admin123", "ADMIN");
+        when(userService.getUsersByRole("ADMIN")).thenReturn(Arrays.asList(adminUser));
 
-        List<Admin> result = adminController.getAllAdmins();
-
-        assertEquals(2, result.size());
-        assertEquals("Jessica", result.get(0).getName());
-        assertEquals("Paul", result.get(1).getName());
-    }
-
-    @Test
-    void testGetAdminById() {
-        ObjectId id = new ObjectId();
-        when(adminService.getAdminById(id)).thenReturn(admin);
-
-        ResponseEntity<Admin> response = adminController.getLaboratory(id);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(admin, response.getBody());
-    }
-
-    @Test
-    void testGetAdminByEmail() {
-        String email = "jessica@bene-gesserit.com";
-        when(adminService.getAdminByEmail(email)).thenReturn(admin);
-
-        ResponseEntity<Admin> response = adminController.getAdminByEmail(email);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(admin, response.getBody());
-    }
-
-    @Test
-    void testGetAdminByName() {
-        String name = "Jessica";
-        when(adminService.getAdminByEmail(name)).thenReturn(admin);
-
-        ResponseEntity<Admin> response = adminController.getAdminByName(name);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(admin, response.getBody());
+        List<User> admins = userController.getAllAdmins();
+        assertEquals(1, admins.size());
+        assertEquals("Admin User", admins.get(0).getName());
     }
 
     // LaboratoryController Tests
@@ -218,41 +220,5 @@ class controllerTest {
         });
 
         assertEquals("Reservation not found", exception.getMessage());
-    }
-
-    // UserController Tests
-    @Test
-    void testCreateUser_Success() {
-        when(userService.createUser(any(User.class))).thenReturn(testUser);
-        ResponseEntity<?> response = userController.createUser(testUser);
-        assertEquals(201, response.getStatusCodeValue());
-        assertEquals(testUser, response.getBody());
-    }
-
-    @Test
-    void testCreateUser_Conflict() {
-        when(userService.createUser(any(User.class)))
-                .thenThrow(new RuntimeException("User already exists"));
-
-        ResponseEntity<?> response = userController.createUser(testUser);
-
-        assertEquals(409, response.getStatusCodeValue());
-        assertEquals("User already exists", response.getBody());
-    }
-
-    @Test
-    void testGetAllUsers() {
-        when(userService.getAllUsers()).thenReturn(Arrays.asList(testUser));
-        List<User> users = userController.getAllUsers();
-        assertEquals(1, users.size());
-        assertEquals("John Doe", users.get(0).getName());
-    }
-
-    @Test
-    void testGetUserById() {
-        when(userService.getUserById(any())).thenReturn(testUser);
-        ResponseEntity<User> response = userController.getUseryById(testUser.getId());
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(testUser, response.getBody());
     }
 }

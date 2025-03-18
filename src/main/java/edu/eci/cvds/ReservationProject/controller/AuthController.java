@@ -7,8 +7,6 @@ import edu.eci.cvds.ReservationProject.model.LoginRequest;
 import edu.eci.cvds.ReservationProject.model.LoginResponse;
 import edu.eci.cvds.ReservationProject.service.UserService;
 
-
-
 @RestController
 @RequestMapping("/login")
 public class AuthController {
@@ -22,10 +20,11 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        Object user = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+        boolean isAuthenticated = userService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
         
-        if (user != null) {
-            return ResponseEntity.ok(new LoginResponse(true, "Credenciales correctas"));    
+        if (isAuthenticated) {
+            String userRole = userService.getUserRole(loginRequest.getEmail());
+            return ResponseEntity.ok(new LoginResponse(true, userRole));    
         } else {
             return ResponseEntity.status(401).body(new LoginResponse(false, "Credenciales incorrectas"));
         }

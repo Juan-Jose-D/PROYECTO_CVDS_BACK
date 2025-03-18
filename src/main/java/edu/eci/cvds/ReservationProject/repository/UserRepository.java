@@ -38,4 +38,6 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
      */
     Optional<User> findByEmail(String email);
 
+    List<User> findByRole(String role);
+
 }

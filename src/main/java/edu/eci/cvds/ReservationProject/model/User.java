@@ -1,8 +1,12 @@
 package edu.eci.cvds.ReservationProject.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.*;
 import org.bson.types.ObjectId;
 
@@ -11,7 +15,7 @@ import org.bson.types.ObjectId;
 /*
  * Clase encargada de modelar una reserva
  */
-public class User {
+public class User implements UserDetails{
 
     @Id
     private ObjectId id;
@@ -25,14 +29,48 @@ public class User {
     @Field("password")
     private String password;
 
+    @Field("role")
+    private String role;
+
 
     public User() {}
 
-    public User(ObjectId id, String name, String email, String password) {
+    public User(ObjectId id, String name, String email, String password, String role) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(() -> role);
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public ObjectId getId() {
@@ -51,10 +89,6 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -66,5 +100,15 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    
 }
 

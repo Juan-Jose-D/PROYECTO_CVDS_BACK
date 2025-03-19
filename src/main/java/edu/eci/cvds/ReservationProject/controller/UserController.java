@@ -1,7 +1,5 @@
 package edu.eci.cvds.ReservationProject.controller;
 
-
-
 import edu.eci.cvds.ReservationProject.model.User;
 import edu.eci.cvds.ReservationProject.service.UserService;
 import org.bson.types.ObjectId;
@@ -12,15 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Controlador REST para gestionar las reservas.
- */
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
-
 
     @Autowired
     public UserController(UserService userService) {
@@ -30,12 +24,31 @@ public class UserController {
     /**
      * Crea un nuevo usuario.
      *
-     * @param reservation Reserva a crear.
-     * @return La reserva creada con estado HTTP 201 (CREATED).
+     * @param user Usuario a crear.
+     * @return El usuario creado con estado HTTP 201 (CREATED).
      */
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user) {
         try {
+            if (user.getRole() == null) {
+                user.setRole("USER");
+            }
+            return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+    }
+
+    /**
+     * Crea un nuevo administrador.
+     *
+     * @param user Usuario a crear como administrador.
+     * @return El administrador creado con estado HTTP 201 (CREATED).
+     */
+    @PostMapping("/admin")
+    public ResponseEntity<?> createAdmin(@RequestBody User user) {
+        try {
+            user.setRole("ADMIN");
             return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -55,14 +68,32 @@ public class UserController {
     /**
      * Obtiene un usuario por su ID.
      *
-     * @param id ID del laboratorio.
-     * @return El laboratorio encontrado.
+     * @param id ID del usuario.
+     * @return El usuario encontrado.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUseryById(@PathVariable ObjectId id) {
+    public ResponseEntity<User> getUserById(@PathVariable ObjectId id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    /**
+     * Obtiene un usuario por su email.
+     *
+     * @param email Email del usuario.
+     * @return El usuario encontrado.
+     */
+    @GetMapping("/email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.getUserByEmail(email).orElse(null));
+    }
 
-
+    /**
+     * Obtiene todos los administradores.
+     *
+     * @return Lista de administradores.
+     */
+    @GetMapping("/admins")
+    public List<User> getAllAdmins() {
+        return userService.getUsersByRole("ADMIN");
+    }
 }

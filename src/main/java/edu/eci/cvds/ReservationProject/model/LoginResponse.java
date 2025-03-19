@@ -1,15 +1,16 @@
 package edu.eci.cvds.ReservationProject.model;
 
-// Clase que representa la respuesta del login
 public class LoginResponse {
     private boolean success;
-    private String message;
+    private String role;
+    private String token;
 
-    public LoginResponse(boolean success, String message) {
+    public LoginResponse(boolean success, String role, String token) {
         this.success = success;
+        this.role = role;
+        this.token = token;
     }
 
-    // Getters y setters
     public boolean isSuccess() {
         return success;
     }
@@ -18,11 +19,19 @@ public class LoginResponse {
         this.success = success;
     }
 
-    public String getUserType() {
-        return message;
+    public String getRole() {
+        return role;
     }
 
-    public void setUserType(String message) {
-        this.message = message;
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

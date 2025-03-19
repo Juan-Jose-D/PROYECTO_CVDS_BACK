@@ -9,7 +9,7 @@ import java.io.IOException;
 public class ObjectIdDeserializer extends JsonDeserializer<ObjectId> {
     @Override
     public ObjectId deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        return new ObjectId(jsonParser.getText()); // Convierte el String en ObjectId
+        return new ObjectId(jsonParser.getText());
     }
 }
 

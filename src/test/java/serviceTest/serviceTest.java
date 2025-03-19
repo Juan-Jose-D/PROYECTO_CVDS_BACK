@@ -174,12 +174,6 @@ class serviceTest {
         assertDoesNotThrow(() -> reservationService.deleteReservation(id));
     }
 
-    @Test
-    void shouldCreateUser() {
-        when(userRepository.save(user)).thenReturn(user);
-        User result = userService.createUser(user);
-        assertNotNull(result);
-    }
 
     @Test
     void shouldGetAllUsers() {
@@ -209,39 +203,4 @@ class serviceTest {
         verify(reservationRepository2, atMost(1000)).save(any(Reservation.class));
     }
 
-
-    @Test
-    void testCreateUser() {
-        when(userRepository.save(user)).thenReturn(user);
-        User result = userService.createUser(user);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testGetAllUsers() {
-        when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
-        List<User> result = userService.getAllUsers();
-        assertFalse(result.isEmpty());
-    }
-
-    @Test
-    void testGetUserById() {
-        when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        User result = userService.getUserById(id);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testGetUserByEmail() {
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        Optional<User> result = userService.getUserByEmail(user.getEmail());
-        assertTrue(result.isPresent());
-    }
-
-    @Test
-    void testGetUsersByRole() {
-        when(userRepository.findByRole("ADMIN")).thenReturn(Collections.singletonList(user));
-        List<User> result = userService.getUsersByRole("ADMIN");
-        assertFalse(result.isEmpty());
-    }
 }

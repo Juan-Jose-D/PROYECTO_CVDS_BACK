@@ -48,7 +48,7 @@ public class UserController {
     @PostMapping("/admin")
     public ResponseEntity<?> createAdmin(@RequestBody User user) {
         try {
-            user.setRole("ADMIN"); // Asignar el rol de administrador
+            user.setRole("ADMIN");
             return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());

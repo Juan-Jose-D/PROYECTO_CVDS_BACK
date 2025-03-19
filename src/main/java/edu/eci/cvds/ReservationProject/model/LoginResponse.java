@@ -2,16 +2,15 @@ package edu.eci.cvds.ReservationProject.model;
 
 public class LoginResponse {
     private boolean success;
-    private String message;
-    private String userRole; // Cambiado de userType a userRole
+    private String role;
+    private String token;
 
-    public LoginResponse(boolean success, String userRole) {
+    public LoginResponse(boolean success, String role, String token) {
         this.success = success;
-        this.userRole = userRole;
-        this.message = success ? "Credenciales correctas" : "Credenciales incorrectas";
+        this.role = role;
+        this.token = token;
     }
 
-    // Getters y Setters
     public boolean isSuccess() {
         return success;
     }
@@ -20,19 +19,19 @@ public class LoginResponse {
         this.success = success;
     }
 
-    public String getMessage() {
-        return message;
+    public String getRole() {
+        return role;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    public String getUserRole() {
-        return userRole;
+    public String getToken() {
+        return token;
     }
 
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

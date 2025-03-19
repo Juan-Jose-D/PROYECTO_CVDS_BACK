@@ -15,18 +15,18 @@ public class ReservationProjectApplication {
     }
 
     @Configuration
-    public static class CorsConfig { // Clase interna estática
+    public static class CorsConfig {
 
         @Bean
         public WebMvcConfigurer corsConfigurer() {
             return new WebMvcConfigurer() {
                 @Override
                 public void addCorsMappings(CorsRegistry registry) {
-                    registry.addMapping("/**") // Permite CORS en todas las rutas
-                            .allowedOrigins("http://127.0.0.1:5500", "http://localhost:3000") // Origen permitido (cambia esto al origen de tu frontend) 
-                            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Métodos permitidos
-                            .allowedHeaders("*") // Cabeceras permitidas
-                            .allowCredentials(true); // Permite credenciales (cookies, tokens, etc.)
+                    registry.addMapping("/**") 
+                            .allowedOrigins("http://127.0.0.1:5500", "http://localhost:3000")  
+                            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") 
+                            .allowedHeaders("*")
+                            .allowCredentials(true);
                 }
             };
         }

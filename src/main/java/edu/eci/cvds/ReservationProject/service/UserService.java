@@ -3,6 +3,8 @@ package edu.eci.cvds.ReservationProject.service;
 import edu.eci.cvds.ReservationProject.model.User;
 import edu.eci.cvds.ReservationProject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,26 +15,15 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    private UserRepository userRepository;
-
-
-    public boolean authenticate(String email, String password) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user != null) {
-            return passwordEncoder.matches(password, user.getPassword());
-        }
-        return false;
-    }
-
-    
-    
-    public String getUserRole(String email) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        return user != null ? user.getRole() : null;
+    public UserService(UserRepository userRepository, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userDetailsService = userDetailsService;
     }
 
     /**
@@ -42,9 +33,14 @@ public class UserService {
      * @return El usuario creado.
      */
     public User createUser(User user) {
-        // Encriptar la contraseña antes de guardarla
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    public String getUserRole(String email) {
+        return userRepository.findByEmail(email)
+                .map(User::getRole)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
     }
 
     /**

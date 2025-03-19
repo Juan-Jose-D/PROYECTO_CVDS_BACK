@@ -119,7 +119,7 @@ class controllerTest {
     @Test
     void testGetUserByEmail() {
         when(userService.getUserByEmail(any())).thenReturn(Optional.of(testUser));
-        ResponseEntity<User> response = userController.getUserByEmail(testUser.getEmail());
+        ResponseEntity<User> response = userController.getUserByEmail(testUser.getUsername());
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(testUser, response.getBody());
     }
@@ -227,5 +227,4 @@ class controllerTest {
 
         assertEquals("Reservation not found", exception.getMessage());
     }
-
 }

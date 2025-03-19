@@ -22,7 +22,7 @@ class modelTest {
 
         assertEquals(id, user.getId());
         assertEquals("Paul Atreides", user.getName());
-        assertEquals("paul.atreides@atreides.com", user.getEmail());
+        assertEquals("paul.atreides@atreides.com", user.getUsername());
         assertEquals("password123", user.getPassword());
         assertEquals("USER", user.getRole());
     }
@@ -34,7 +34,7 @@ class modelTest {
 
         assertEquals(id, user.getId());
         assertEquals("Duncan Idaho", user.getName());
-        assertEquals("duncan.idaho@atreides.com", user.getEmail());
+        assertEquals("duncan.idaho@atreides.com", user.getUsername()); // Cambiado a getEmail
         assertEquals("swordmaster", user.getPassword());
         assertEquals("ADMIN", user.getRole());
     }
@@ -51,19 +51,22 @@ class modelTest {
 
     @Test
     void testLoginResponseConstructor() {
-        LoginResponse response = new LoginResponse(true, "ADMIN");
-
+        LoginResponse response = new LoginResponse(true, "ADMIN", "dummyToken");
+    
         assertTrue(response.isSuccess());
-        assertEquals("ADMIN", response.getUserRole());
+        assertEquals("ADMIN", response.getRole());
+        assertEquals("dummyToken", response.getToken());
     }
-
+    
     @Test
     void testLoginResponseGettersAndSetters() {
-        LoginResponse response = new LoginResponse(false, "");
+        LoginResponse response = new LoginResponse(false, "", "");
         response.setSuccess(true);
-        response.setUserRole("USER");
-
+        response.setRole("USER");
+        response.setToken("newToken");
+    
         assertTrue(response.isSuccess());
-        assertEquals("USER", response.getUserRole());
+        assertEquals("USER", response.getRole());
+        assertEquals("newToken", response.getToken());
     }
 }

@@ -23,7 +23,7 @@ public class ReservationProjectApplication {
                 @Override
                 public void addCorsMappings(CorsRegistry registry) {
                     registry.addMapping("/**") 
-                            .allowedOrigins("http://127.0.0.1:5500", "http://localhost:3000", "https://frontdespliegue-gae9f9b2aaedfabw.eastus-01.azurewebsites.net" )  
+                            .allowedOrigins("http://127.0.0.1:5500", "http://localhost:3000", "https://*.azurewebsites.net", "https://frontdespliegue-gae9f9b2aaedfabw.eastus-01.azurewebsites.net/")  
                             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") 
                             .allowedHeaders("*")
                             .allowCredentials(true);

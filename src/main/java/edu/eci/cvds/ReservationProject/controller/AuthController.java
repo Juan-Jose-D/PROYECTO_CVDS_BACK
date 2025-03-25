@@ -18,7 +18,6 @@ import edu.eci.cvds.ReservationProject.service.UserDetailsServiceImpl;
         "http://localhost:3000", 
         "http://localhost:5500"
     }, 
-    allowCredentials = "true", 
     methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}
 )
 

@@ -61,19 +61,9 @@ public class SecurityConfig {
             "http://localhost:5500"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
-        configuration.setAllowedHeaders(Arrays.asList(
-            "Authorization", 
-            "Cache-Control", 
-            "Content-Type", 
-            "Access-Control-Allow-Origin", 
-            "Access-Control-Allow-Credentials"
-        ));
-        configuration.setExposedHeaders(Arrays.asList(
-            "Authorization", 
-            "Access-Control-Allow-Origin", 
-            "Access-Control-Allow-Credentials"
-        ));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+        configuration.setAllowCredentials(false);
         configuration.setMaxAge(3600L);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

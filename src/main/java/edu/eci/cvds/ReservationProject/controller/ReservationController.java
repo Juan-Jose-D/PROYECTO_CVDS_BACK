@@ -18,6 +18,14 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin(
+    origins = {
+        "https://frontdespliegue-gae9f9b2aaedfabw.eastus-01.azurewebsites.net", 
+        "http://localhost:3000", 
+        "http://localhost:5500"
+    }, 
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}
+)
 /**
  * Controlador REST para gestionar las reservas.
  */

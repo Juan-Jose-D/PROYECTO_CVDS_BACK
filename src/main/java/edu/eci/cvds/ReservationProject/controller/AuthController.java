@@ -12,6 +12,16 @@ import edu.eci.cvds.ReservationProject.model.LoginRequest;
 import edu.eci.cvds.ReservationProject.model.LoginResponse;
 import edu.eci.cvds.ReservationProject.service.UserDetailsServiceImpl;
 
+@CrossOrigin(
+    origins = {
+        "https://frontdespliegue-gae9f9b2aaedfabw.eastus-01.azurewebsites.net", 
+        "http://localhost:3000", 
+        "http://localhost:5500"
+    }, 
+    allowCredentials = "true", 
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS}
+)
+
 @RestController
 @RequestMapping("/login")
 public class AuthController {

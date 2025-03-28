@@ -12,7 +12,8 @@ import java.util.List;
 
 @CrossOrigin(
     origins = {
-        "https://frontdespliegue-gae9f9b2aaedfabw.eastus-01.azurewebsites.net", 
+        "https://frontdespliegue-gae9f9b2aaedfabw.eastus-01.azurewebsites.net",
+        "https://proyectoreservascvdsfrontend-fxgqetgfcsagbqhf.eastus-01.azurewebsites.net",
         "http://localhost:3000", 
         "http://localhost:5500"
     }, 

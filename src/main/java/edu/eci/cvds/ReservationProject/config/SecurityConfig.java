@@ -56,7 +56,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
-            "https://frontdespliegue-gae9f9b2aaedfabw.eastus-01.azurewebsites.net", 
+            "https://frontdespliegue-gae9f9b2aaedfabw.eastus-01.azurewebsites.net",
+            "https://proyectoreservascvdsfrontend-fxgqetgfcsagbqhf.eastus-01.azurewebsites.net", 
             "http://localhost:3000", 
             "http://localhost:5500"
         ));

@@ -23,6 +23,7 @@ public interface ReservationRepository extends MongoRepository<Reservation, Obje
      */
     Optional<Reservation> findById(ObjectId id);
 
+    Optional<Reservation> findByLaboratoryAndDateAndInitialTime(Laboratory laboratoryId, Date date, String initialTime);
 
     /**
      * Busca reservas que coincidan con la fecha y el rango de tiempo.

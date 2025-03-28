@@ -1,5 +1,6 @@
 package edu.eci.cvds.ReservationProject.controller;
 
+import edu.eci.cvds.ReservationProject.ReservationProjectException;
 import edu.eci.cvds.ReservationProject.model.Reservation;
 import edu.eci.cvds.ReservationProject.service.ReservationService;
 import org.bson.types.ObjectId;
@@ -12,11 +13,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Date;
 
 @CrossOrigin(
     origins = {
@@ -95,11 +98,40 @@ public class ReservationController {
      * @param id ID de la reserva a eliminar.
      * @return Respuesta con estado HTTP 204 (NO CONTENT).
      */
+    @DeleteMapping
+    public ResponseEntity<?> deleteReservation(
+        @RequestParam String labId,
+        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") String date,
+        @RequestParam @DateTimeFormat(pattern = "HH:mm") String time) {
+        try {
+            ObjectId laboratoryId = new ObjectId(labId);
+            LocalDate requestDate = LocalDate.parse(date);
+            Date convertedDate = Date.from(requestDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            
+            reservationService.deleteReservationByLabDateAndTime(laboratoryId, convertedDate, time);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID de laboratorio inválido");
+        } catch (DateTimeParseException e) {
+            return ResponseEntity.badRequest().body("Formato de fecha/hora incorrecto. Use yyyy-MM-dd y HH:mm");
+        } catch (ReservationProjectException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+
+/**
+     * Elimina una reserva por su ID.
+     *
+     * @param id ID de la reserva a eliminar.
+     * @return Respuesta con estado HTTP 204 (NO CONTENT).
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable ObjectId id) {
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
+
 
     /**
      * Verifica la disponibilidad de un laboratorio para una fecha y hora específicas.

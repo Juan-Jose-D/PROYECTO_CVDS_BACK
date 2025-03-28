@@ -12,6 +12,7 @@ import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.Optional;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.Random;
@@ -79,6 +80,25 @@ public class ReservationService {
                 .orElseThrow(() -> new ReservationProjectException(ReservationProjectException.RESERVATION_NOT_FOUND + id));
     }
 
+
+    public void deleteReservationByLabDateAndTime(ObjectId laboratoryId, Date date, String initialTime) {
+        Laboratory lab = laboratoryService.getLaboratoryById(laboratoryId);
+        Reservation reservation = reservationRepository.findByLaboratoryAndDateAndInitialTime(lab, date, initialTime)
+                .orElseThrow(() -> new ReservationProjectException(ReservationProjectException.RESERVATION_NOT_FOUND + laboratoryId));
+        
+        reservationRepository.deleteById(reservation.getId());
+    }
+
+    /**
+     * Elimina una reserva por su ID.
+     *
+     * @param id Identificador de la reserva a eliminar.
+     */
+    public void deleteReservation(ObjectId id) {
+        reservationRepository.deleteById(id);
+    }
+
+
     /**
      * Modifica una reserva existente.
      *
@@ -93,16 +113,6 @@ public class ReservationService {
         reservation.setId(id);
         return reservationRepository.save(reservation);
     }
-
-    /**
-     * Elimina una reserva por su ID.
-     *
-     * @param id Identificador de la reserva a eliminar.
-     */
-    public void deleteReservation(ObjectId id) {
-        reservationRepository.deleteById(id);
-    }
-
 
         /**
      * Verifica si un laboratorio está disponible para una fecha y hora específica.

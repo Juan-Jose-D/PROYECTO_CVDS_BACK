@@ -59,8 +59,7 @@ class serviceTest {
         time = LocalTime.of(10, 0);
     }
 
-    // test required in Lab 5 (Dado que no hay ninguna reserva registrada, Cuándo la consulto a nivel de servicio,
-    // Entonces la consulta no retornará ningún resultado.)
+
     @Test
     void testGetReservation_WhenNoReservationExists_ThenCreateReservation() {
         when(reservationRepository.findAll()).thenReturn(Collections.emptyList());
@@ -79,8 +78,6 @@ class serviceTest {
         assertEquals(reservation.getId(), resultGet.getId());
     }
 
-    // test required in Lab 5 (Dado que tengo 1 reserva registrada,
-    // Cuándo la elimino a nivel de servicio, Entonces la eliminación será exitosa.)
     @Test
     void shouldDeleteReservation_GivenReservationExists() {
         when(reservationRepository.findById(id)).thenReturn(Optional.of(reservation));
@@ -90,8 +87,7 @@ class serviceTest {
         assertDoesNotThrow(() -> reservationService.deleteReservation(id));
     }
 
-    // test required in Lab 5 (Dado que tengo 1 reserva registrada, Cuándo la elimino y consulto a nivel de servicio,
-    // Entonces el resultado de la consulta no retornará ningún resultado.)
+
     @Test
     void givenReservationExists_ThenDeleteAndVerifyDeletion() {
         when(reservationRepository.findById(id)).thenReturn(Optional.of(reservation));
@@ -151,8 +147,6 @@ class serviceTest {
         assertFalse(result.isEmpty());
     }
 
-    // test required in Lab 5 (Dado que tengo 1 reserva registrada, Cuando lo consulto a nivel de servicio,
-    // Entonces la consulta será exitosa validando el campo id.)
     @Test
     void shouldGetReservationById() {
         when(reservationRepository.findById(id)).thenReturn(Optional.of(reservation));

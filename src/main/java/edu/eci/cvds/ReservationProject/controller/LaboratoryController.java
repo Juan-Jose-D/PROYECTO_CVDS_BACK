@@ -69,4 +69,19 @@ public class LaboratoryController {
         return ResponseEntity.ok(laboratoryService.getLaboratoryById(id));
     }
 
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLaboratory(@PathVariable String id) {
+        try {
+            ObjectId laboratoryId = new ObjectId(id);
+            laboratoryService.deleteLaboratory(laboratoryId);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+}
+
 }   

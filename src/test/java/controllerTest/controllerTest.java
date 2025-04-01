@@ -201,7 +201,7 @@ class controllerTest {
     @Test
     void testDeleteReservation() {
         doNothing().when(reservationService).deleteReservation(any());
-        ResponseEntity<Void> response = reservationController.deleteReservation(testReservation.getId());
+        ResponseEntity<Void> response = reservationController.deleteReservation(testReservation.getId().toString());
         assertEquals(204, response.getStatusCodeValue());
     }
 

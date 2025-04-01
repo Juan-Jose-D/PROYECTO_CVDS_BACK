@@ -58,4 +58,13 @@ public class LaboratoryService {
             .orElseThrow(() -> new ReservationProjectException(ReservationProjectException.LABORATORY_NOT_FOUND + id));
     }
 
+
+    /**
+     * Elimina un laboratorio por su ID.
+     *
+     * @param id Identificador del laboratorio a eliminar.
+     */
+    public void deleteLaboratory(ObjectId id) {
+        laboratoryRepository.deleteById(id);
+    }
 }

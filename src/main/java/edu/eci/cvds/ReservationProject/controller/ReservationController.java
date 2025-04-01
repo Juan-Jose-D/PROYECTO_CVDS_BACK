@@ -128,8 +128,9 @@ public class ReservationController {
      * @return Respuesta con estado HTTP 204 (NO CONTENT).
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable ObjectId id) {
-        reservationService.deleteReservation(id);
+    public ResponseEntity<Void> deleteReservation(@PathVariable String id) {
+        ObjectId reservationId = new ObjectId(id);
+        reservationService.deleteReservation(reservationId);
         return ResponseEntity.noContent().build();
     }
 

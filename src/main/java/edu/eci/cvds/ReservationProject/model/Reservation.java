@@ -11,14 +11,20 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 @Document(collection = "reservas")
-@CompoundIndex(def = "{'laboratory.id': 1, 'date': 1}")
 /*
  * Clase encargada de modelar una reserva
  */
 public class Reservation {
 
     @Id
+    @JsonSerialize(using = ObjectIdSerializer.class)
+    @JsonDeserialize(using = ObjectIdDeserializer.class) 
     private ObjectId id;
 
     @Field("user")
